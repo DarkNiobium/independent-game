@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6391cd918bfd919258f51a524719c9f6, type: 3}
+  m_Name: SO_ChorvaUyi
+  m_EditorClassIdentifier: Assembly-CSharp::BozorShop.BuildingDataSO
+  id: SO_ChorvaUyi
+  displayName: CHORVA UYI
+  category: 1
+  buildingPreview: {fileID: 21300000, guid: 568f512301c83eec180261d4f3681f64, type: 3}
+  resourceIcon: {fileID: 21300000, guid: 3c2c97446b0c6928da1c54ddb2635703, type: 3}
+  productionRate: 15
+  rateUnit: / soat
+  capacityIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
+  capacity: 60
+  priceGold: 500000
+  prefabToBuild: {fileID: 0}
