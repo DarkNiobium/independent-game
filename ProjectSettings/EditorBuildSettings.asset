@@ -38,4 +38,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/SoftLeitner/CityBuilderCore.Tests/Playgrounds/MissionSelector/MissionSelectorStage.unity
     guid: debef48a0b559b84b8a20aff6db4e484
+  - enabled: 1
+    path: Assets/Scenes/SettingsScene.unity
+    guid: 824f3769c231dca12808da5beaf1cc87
   m_configObjects: {}

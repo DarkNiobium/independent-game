@@ -219,17 +219,27 @@ namespace IndependenceGame.Settings
 
             List<string> options = new List<string>();
             var resList = Screen.resolutions;
+            var uniqueList = new List<Resolution>();
             var seen = new HashSet<string>();
 
-            for (int i = 0; i < resList.Length; i++)
+            // Collect unique resolutions
+            for (int i = resList.Length - 1; i >= 0; i--)
             {
                 string key = $"{resList[i].width}x{resList[i].height}";
                 if (!seen.Contains(key))
                 {
                     seen.Add(key);
-                    availableResolutions.Add(resList[i]);
-                    options.Add($"{resList[i].width} x {resList[i].height}");
+                    uniqueList.Add(resList[i]);
                 }
+            }
+
+            // Sort descending by resolution width & height
+            uniqueList.Sort((a, b) => (b.width * b.height).CompareTo(a.width * a.height));
+            availableResolutions.AddRange(uniqueList);
+
+            foreach (var r in availableResolutions)
+            {
+                options.Add($"{r.width} x {r.height}");
             }
 
             if (availableResolutions.Count == 0)
