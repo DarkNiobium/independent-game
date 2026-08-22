@@ -326,7 +326,7 @@ namespace BozorShop.Editor
             bgImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "bg_city_blurred.png");
             bgImg.color = new Color(0.95f, 0.95f, 0.95f, 1f);
 
-            // BozorWindow Root
+            // BozorWindow Root (Buildings Section)
             GameObject windowRoot = new GameObject("BozorWindow", typeof(RectTransform), typeof(BozorShopController));
             windowRoot.transform.SetParent(canvasGO.transform, false);
             RectTransform windowRt = windowRoot.GetComponent<RectTransform>();
@@ -370,7 +370,7 @@ namespace BozorShop.Editor
             currRt.anchorMax = new Vector2(1f, 1f);
             currRt.pivot = new Vector2(1f, 0.5f);
             currRt.anchoredPosition = new Vector2(-70, 8);
-            currRt.sizeDelta = new Vector2(158, 30);
+            currRt.sizeDelta = new Vector2(144, 32);
             Image currImg = currPill.GetComponent<Image>();
             currImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "currency_pill_bg.png");
             currImg.type = Image.Type.Simple;
@@ -410,7 +410,7 @@ namespace BozorShop.Editor
             closeRt.anchorMax = new Vector2(1f, 1f);
             closeRt.pivot = new Vector2(1f, 0.5f);
             closeRt.anchoredPosition = new Vector2(-12, 18);
-            closeRt.sizeDelta = new Vector2(43, 43);
+            closeRt.sizeDelta = new Vector2(43, 44);
             Image closeImg = closeBtnGO.GetComponent<Image>();
             closeImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "btn_close_red.png");
             closeImg.type = Image.Type.Simple;
@@ -454,9 +454,20 @@ namespace BozorShop.Editor
             hlg.childForceExpandWidth = false;
             hlg.childForceExpandHeight = false;
 
+            // Create Placeholder Panels for other Sections
+            GameObject resPanel = CreateSectionPlaceholderPanel(canvasGO, "ResourcesPanel", "RESURSLAR - OMBOR", "Bu bo'limda resurslar va omborlar boshqariladi.", fontAsset);
+            GameObject armyPanel = CreateSectionPlaceholderPanel(canvasGO, "ArmyPanel", "ARMIYA - QO'SHINLAR", "Bu bo'limda qo'shinlar va harbiy binolar boshqariladi.", fontAsset);
+            GameObject reschPanel = CreateSectionPlaceholderPanel(canvasGO, "ResearchPanel", "TADQIQOT - FAN", "Bu bo'limda yangi texnologiyalar tadqiq qilinadi.", fontAsset);
+            GameObject otherPanel = CreateSectionPlaceholderPanel(canvasGO, "OtherPanel", "BOSHQA - SOZLAMALAR", "O'yin sozlamalari va profil ma'lumotlari.", fontAsset);
+
+            resPanel.SetActive(false);
+            armyPanel.SetActive(false);
+            reschPanel.SetActive(false);
+            otherPanel.SetActive(false);
+
             // Bottom Navigation Bar
             GameObject navBarGO = new GameObject("BottomNavigationBar", typeof(RectTransform), typeof(Image), typeof(BottomNavUI));
-            navBarGO.transform.SetParent(windowRoot.transform, false);
+            navBarGO.transform.SetParent(canvasGO.transform, false);
             RectTransform navRt = navBarGO.GetComponent<RectTransform>();
             navRt.anchorMin = new Vector2(0.5f, 0f);
             navRt.anchorMax = new Vector2(0.5f, 0f);
@@ -464,8 +475,42 @@ namespace BozorShop.Editor
             navRt.anchoredPosition = new Vector2(0, 15);
             navRt.sizeDelta = new Vector2(984, 62);
             Image navImg = navBarGO.GetComponent<Image>();
-            navImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "nav_bar_frame.png");
+            navImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "nav_bar_frame_clean.png");
             navImg.type = Image.Type.Simple;
+
+            BottomNavUI bottomNavUI = navBarGO.GetComponent<BottomNavUI>();
+            Sprite navActivePill = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "nav_active_pill.png");
+
+            Sprite iconRes = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "icon_nav_resources.png");
+            Sprite iconBldg = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "icon_nav_buildings.png");
+            Sprite iconArmy = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "icon_nav_army.png");
+            Sprite iconResch = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "icon_nav_research.png");
+            Sprite iconOther = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "icon_nav_other.png");
+
+            var navItems = new System.Collections.Generic.List<BottomNavItemUI>();
+            navItems.Add(CreateBottomNavItem(navBarGO, "Nav_Resources", "RESURSLAR", BottomNavSection.Resources, -325f, 160f, 52f, iconRes, navActivePill, fontAsset, false));
+            navItems.Add(CreateBottomNavItem(navBarGO, "Nav_Buildings", "BINOLAR", BottomNavSection.Buildings, -163f, 160f, 52f, iconBldg, navActivePill, fontAsset, true));
+            navItems.Add(CreateBottomNavItem(navBarGO, "Nav_Army", "ARMIYA", BottomNavSection.Army, 0f, 160f, 52f, iconArmy, navActivePill, fontAsset, false));
+            navItems.Add(CreateBottomNavItem(navBarGO, "Nav_Research", "TADQIQOT", BottomNavSection.Research, 163f, 160f, 52f, iconResch, navActivePill, fontAsset, false));
+            navItems.Add(CreateBottomNavItem(navBarGO, "Nav_Other", "BOSHQA", BottomNavSection.Other, 325f, 160f, 52f, iconOther, navActivePill, fontAsset, false));
+
+            // Wire BottomNavUI
+            var navSO = new SerializedObject(bottomNavUI);
+            navSO.FindProperty("defaultSection").enumValueIndex = (int)BottomNavSection.Buildings;
+            navSO.FindProperty("buildingsPanel").objectReferenceValue = windowRoot;
+            navSO.FindProperty("resourcesPanel").objectReferenceValue = resPanel;
+            navSO.FindProperty("armyPanel").objectReferenceValue = armyPanel;
+            navSO.FindProperty("researchPanel").objectReferenceValue = reschPanel;
+            navSO.FindProperty("otherPanel").objectReferenceValue = otherPanel;
+
+            SerializedProperty itemsProp = navSO.FindProperty("navItems");
+            itemsProp.ClearArray();
+            for (int i = 0; i < navItems.Count; i++)
+            {
+                itemsProp.InsertArrayElementAtIndex(i);
+                itemsProp.GetArrayElementAtIndex(i).objectReferenceValue = navItems[i];
+            }
+            navSO.ApplyModifiedProperties();
 
             // Wire Controller
             var so = new SerializedObject(controller);
@@ -502,6 +547,143 @@ namespace BozorShop.Editor
             so.ApplyModifiedProperties();
 
             EditorSceneManager.SaveScene(scene, ScenePath);
+        }
+
+        private static GameObject CreateSectionPlaceholderPanel(GameObject parent, string name, string title, string description, TMP_FontAsset font)
+        {
+            GameObject panelGO = new GameObject(name, typeof(RectTransform), typeof(Image));
+            panelGO.transform.SetParent(parent.transform, false);
+
+            RectTransform rt = panelGO.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(0, -22);
+            rt.sizeDelta = new Vector2(1004, 586);
+
+            Image img = panelGO.GetComponent<Image>();
+            img.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "frame_main_wood.png");
+            img.type = Image.Type.Simple;
+
+            // Content Card
+            GameObject cardGO = new GameObject("Card", typeof(RectTransform), typeof(Image));
+            cardGO.transform.SetParent(panelGO.transform, false);
+            RectTransform cardRt = cardGO.GetComponent<RectTransform>();
+            cardRt.anchorMin = new Vector2(0.5f, 0.5f);
+            cardRt.anchorMax = new Vector2(0.5f, 0.5f);
+            cardRt.pivot = new Vector2(0.5f, 0.5f);
+            cardRt.anchoredPosition = new Vector2(0, -10);
+            cardRt.sizeDelta = new Vector2(940, 470);
+
+            Image cardImg = cardGO.GetComponent<Image>();
+            cardImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritesPath + "card_bg_parchment.png");
+            cardImg.type = Image.Type.Simple;
+
+            // Title Text
+            GameObject titleGO = new GameObject("TitleText", typeof(RectTransform), typeof(TextMeshProUGUI));
+            titleGO.transform.SetParent(cardGO.transform, false);
+            RectTransform titleRt = titleGO.GetComponent<RectTransform>();
+            titleRt.anchorMin = new Vector2(0.5f, 1f);
+            titleRt.anchorMax = new Vector2(0.5f, 1f);
+            titleRt.pivot = new Vector2(0.5f, 1f);
+            titleRt.anchoredPosition = new Vector2(0, -35);
+            titleRt.sizeDelta = new Vector2(800, 45);
+
+            TextMeshProUGUI titleTMP = titleGO.GetComponent<TextMeshProUGUI>();
+            titleTMP.font = font;
+            titleTMP.fontSize = 24;
+            titleTMP.fontStyle = FontStyles.Bold;
+            titleTMP.alignment = TextAlignmentOptions.Center;
+            titleTMP.color = new Color(0.24f, 0.16f, 0.10f, 1f);
+            titleTMP.text = title;
+
+            // Description Text
+            GameObject descGO = new GameObject("DescText", typeof(RectTransform), typeof(TextMeshProUGUI));
+            descGO.transform.SetParent(cardGO.transform, false);
+            RectTransform descRt = descGO.GetComponent<RectTransform>();
+            descRt.anchorMin = new Vector2(0.5f, 0.5f);
+            descRt.anchorMax = new Vector2(0.5f, 0.5f);
+            descRt.pivot = new Vector2(0.5f, 0.5f);
+            descRt.anchoredPosition = new Vector2(0, 0);
+            descRt.sizeDelta = new Vector2(700, 100);
+
+            TextMeshProUGUI descTMP = descGO.GetComponent<TextMeshProUGUI>();
+            descTMP.font = font;
+            descTMP.fontSize = 18;
+            descTMP.alignment = TextAlignmentOptions.Center;
+            descTMP.color = new Color(0.35f, 0.25f, 0.18f, 1f);
+            descTMP.text = description + "\n\n<i><color=#5A402A>(Tez orada yangi imkoniyatlar qo'shiladi)</color></i>";
+
+            return panelGO;
+        }
+
+        private static BottomNavItemUI CreateBottomNavItem(GameObject parent, string name, string label, BottomNavSection sec, float posX, float width, float height, Sprite icon, Sprite activePill, TMP_FontAsset font, bool isInitialActive)
+        {
+            GameObject itemGO = new GameObject(name, typeof(RectTransform), typeof(Button), typeof(BottomNavItemUI));
+            itemGO.transform.SetParent(parent.transform, false);
+
+            RectTransform rt = itemGO.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(posX, 0);
+            rt.sizeDelta = new Vector2(width, height);
+
+            // Active Badge
+            GameObject badgeGO = new GameObject("ActiveBadge", typeof(RectTransform), typeof(Image));
+            badgeGO.transform.SetParent(itemGO.transform, false);
+            RectTransform badgeRt = badgeGO.GetComponent<RectTransform>();
+            badgeRt.anchorMin = Vector2.zero;
+            badgeRt.anchorMax = Vector2.one;
+            badgeRt.sizeDelta = Vector2.zero;
+            Image badgeImg = badgeGO.GetComponent<Image>();
+            badgeImg.sprite = activePill;
+            badgeImg.type = Image.Type.Simple;
+            badgeGO.SetActive(isInitialActive);
+
+            // Icon
+            GameObject iconGO = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            iconGO.transform.SetParent(itemGO.transform, false);
+            RectTransform iconRt = iconGO.GetComponent<RectTransform>();
+            iconRt.anchorMin = new Vector2(0, 0.5f);
+            iconRt.anchorMax = new Vector2(0, 0.5f);
+            iconRt.pivot = new Vector2(0, 0.5f);
+            iconRt.anchoredPosition = new Vector2(22, 0);
+            iconRt.sizeDelta = new Vector2(36, 34);
+            Image iconImg = iconGO.GetComponent<Image>();
+            iconImg.sprite = icon;
+            iconImg.preserveAspect = true;
+
+            // Text
+            GameObject textGO = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+            textGO.transform.SetParent(itemGO.transform, false);
+            RectTransform textRt = textGO.GetComponent<RectTransform>();
+            textRt.anchorMin = new Vector2(0, 0);
+            textRt.anchorMax = new Vector2(1, 1);
+            textRt.pivot = new Vector2(0, 0.5f);
+            textRt.anchoredPosition = new Vector2(46, 0);
+            textRt.sizeDelta = new Vector2(-50, 0);
+
+            TextMeshProUGUI tmp = textGO.GetComponent<TextMeshProUGUI>();
+            tmp.font = font;
+            tmp.fontSize = 13;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.alignment = TextAlignmentOptions.Left;
+            tmp.color = isInitialActive ? Color.white : new Color(0.75f, 0.65f, 0.52f, 1f);
+            tmp.text = label;
+
+            BottomNavItemUI itemUI = itemGO.GetComponent<BottomNavItemUI>();
+            var so = new SerializedObject(itemUI);
+            so.FindProperty("section").enumValueIndex = (int)sec;
+            so.FindProperty("activeBadge").objectReferenceValue = badgeImg;
+            so.FindProperty("iconImage").objectReferenceValue = iconImg;
+            so.FindProperty("labelText").objectReferenceValue = tmp;
+            so.FindProperty("button").objectReferenceValue = itemGO.GetComponent<Button>();
+            so.FindProperty("activeTextColor").colorValue = Color.white;
+            so.FindProperty("inactiveTextColor").colorValue = new Color(0.75f, 0.65f, 0.52f, 1f);
+            so.ApplyModifiedProperties();
+
+            return itemUI;
         }
 
         private static ShopTabUI CreateSolidTab(GameObject parent, string name, string label, BuildingCategory cat, float posX, float width, float height, float posY, Sprite activeBg, Sprite inactiveBg, TMP_FontAsset font, bool isInitialActive)

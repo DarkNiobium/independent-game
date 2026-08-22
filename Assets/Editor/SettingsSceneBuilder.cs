@@ -187,9 +187,9 @@ namespace IndependenceGame.Settings.Editor
             Sprite iconGameplay = AssetDatabase.LoadAssetAtPath<Sprite>(SettingsSpritesPath + "icon_tab_gameplay.png");
 
             var tabList = new List<SettingsTabUI>();
-            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Audio", "OVOZ (AUDIO)", SettingsTabCategory.Audio, -260f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconAudio, fontAsset, true));
-            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Graphics", "GRAFIKA (GRAPHICS)", SettingsTabCategory.Graphics, 0f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconGraphics, fontAsset, false));
-            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Gameplay", "O'YIN (GAMEPLAY)", SettingsTabCategory.Gameplay, 260f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconGameplay, fontAsset, false));
+            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Audio", "OVOZ", SettingsTabCategory.Audio, -260f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconAudio, fontAsset, true));
+            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Graphics", "GRAFIKA", SettingsTabCategory.Graphics, 0f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconGraphics, fontAsset, false));
+            tabList.Add(CreateSolidTabWithIcon(tabBarGO, "Tab_Gameplay", "O'YIN", SettingsTabCategory.Gameplay, 260f, 240, 43, 0, tabActiveBg, tabInactiveBg, iconGameplay, fontAsset, false));
 
             // 11. Content Area Container (Parchment background)
             GameObject contentContainerGO = new GameObject("ContentContainer", typeof(RectTransform), typeof(Image));
@@ -213,22 +213,22 @@ namespace IndependenceGame.Settings.Editor
             GameObject gameplayPanel = CreateSectionPanel(contentContainerGO, "GameplayPanel");
 
             // --- Populate Audio Panel ---
-            var masterSliderRow = CreateSliderRow(audioPanel, "MasterVolumeRow", "ASOSIY OVOZ (Master Volume)", fontAsset, out Slider masterSlider, out TextMeshProUGUI masterValText);
-            var musicSliderRow = CreateSliderRow(audioPanel, "MusicVolumeRow", "MUSIQA OVOZI (Music Volume)", fontAsset, out Slider musicSlider, out TextMeshProUGUI musicValText);
-            var sfxSliderRow = CreateSliderRow(audioPanel, "SFXVolumeRow", "EFFEKTLAR OVOZI (SFX Volume)", fontAsset, out Slider sfxSlider, out TextMeshProUGUI sfxValText);
-            var muteToggleRow = CreateToggleRow(audioPanel, "MuteToggleRow", "BARCHA OVOZNI O'CHIRISH (Mute All)", fontAsset, out Toggle muteToggle, out TextMeshProUGUI muteStatusText);
+            var masterSliderRow = CreateSliderRow(audioPanel, "MasterVolumeRow", "Asosiy ovoz", fontAsset, out Slider masterSlider, out TextMeshProUGUI masterValText);
+            var musicSliderRow = CreateSliderRow(audioPanel, "MusicVolumeRow", "Musiqa", fontAsset, out Slider musicSlider, out TextMeshProUGUI musicValText);
+            var sfxSliderRow = CreateSliderRow(audioPanel, "SFXVolumeRow", "Ovoz effektlari", fontAsset, out Slider sfxSlider, out TextMeshProUGUI sfxValText);
+            var muteToggleRow = CreateToggleRow(audioPanel, "MuteToggleRow", "Ovozni o'chirish", fontAsset, out Toggle muteToggle, out TextMeshProUGUI muteStatusText);
 
             // --- Populate Graphics Panel ---
-            var resDropdownRow = CreateDropdownRow(graphicsPanel, "ResolutionRow", "EKRAN RUXSATI (Resolution)", fontAsset, out TMP_Dropdown resDropdown);
-            var fsDropdownRow = CreateDropdownRow(graphicsPanel, "FullscreenRow", "EKRAN REJIMI (Display Mode)", fontAsset, out TMP_Dropdown fsDropdown);
-            var qualDropdownRow = CreateDropdownRow(graphicsPanel, "QualityRow", "GRAFIKA SIFATI (Quality Preset)", fontAsset, out TMP_Dropdown qualDropdown);
-            var vsyncToggleRow = CreateToggleRow(graphicsPanel, "VSyncRow", "VERTIKAL SINXRONIZATSIYA (V-Sync)", fontAsset, out Toggle vsyncToggle, out TextMeshProUGUI vsyncStatusText);
-            var fpsDropdownRow = CreateDropdownRow(graphicsPanel, "FPSRow", "KADRLAR CHASTOTASI (Target FPS)", fontAsset, out TMP_Dropdown fpsDropdown);
+            var resDropdownRow = CreateDropdownRow(graphicsPanel, "ResolutionRow", "Ekran o'lchami", fontAsset, out TMP_Dropdown resDropdown);
+            var fsDropdownRow = CreateDropdownRow(graphicsPanel, "FullscreenRow", "Ekran rejimi", fontAsset, out TMP_Dropdown fsDropdown);
+            var qualDropdownRow = CreateDropdownRow(graphicsPanel, "QualityRow", "Grafika sifati", fontAsset, out TMP_Dropdown qualDropdown);
+            var vsyncToggleRow = CreateToggleRow(graphicsPanel, "VSyncRow", "V-Sync", fontAsset, out Toggle vsyncToggle, out TextMeshProUGUI vsyncStatusText);
+            var fpsDropdownRow = CreateDropdownRow(graphicsPanel, "FPSRow", "FPS cheklovi", fontAsset, out TMP_Dropdown fpsDropdown);
 
             // --- Populate Gameplay Panel ---
-            var langDropdownRow = CreateDropdownRow(gameplayPanel, "LanguageRow", "TIL (Language)", fontAsset, out TMP_Dropdown langDropdown);
-            var panSliderRow = CreateSliderRow(gameplayPanel, "PanSpeedRow", "KAMERA TEZLIGI (Camera Pan Speed)", fontAsset, out Slider panSlider, out TextMeshProUGUI panValText, 0.5f, 2.0f);
-            var autoSaveDropdownRow = CreateDropdownRow(gameplayPanel, "AutoSaveRow", "AVTO-SAQLASH (Auto-Save)", fontAsset, out TMP_Dropdown autoSaveDropdown);
+            var langDropdownRow = CreateDropdownRow(gameplayPanel, "LanguageRow", "Til", fontAsset, out TMP_Dropdown langDropdown);
+            var panSliderRow = CreateSliderRow(gameplayPanel, "PanSpeedRow", "Kamera tezligi", fontAsset, out Slider panSlider, out TextMeshProUGUI panValText, 0.5f, 2.0f);
+            var autoSaveDropdownRow = CreateDropdownRow(gameplayPanel, "AutoSaveRow", "Avto-saqlash", fontAsset, out TMP_Dropdown autoSaveDropdown);
 
             graphicsPanel.SetActive(false);
             gameplayPanel.SetActive(false);
@@ -245,11 +245,11 @@ namespace IndependenceGame.Settings.Editor
             bottomRt.sizeDelta = new Vector2(940, 50);
 
             // Reset Defaults Button
-            Button resetBtn = CreateActionButton(bottomBarGO, "ResetDefaultsButton", "ASLIGA QAYTARISH", new Vector2(-180, 0), new Vector2(230, 44), fontAsset,
+            Button resetBtn = CreateActionButton(bottomBarGO, "ResetDefaultsButton", "Standart", new Vector2(-150, 0), new Vector2(180, 44), fontAsset,
                 AssetDatabase.LoadAssetAtPath<Sprite>(BozorSpritesPath + "tab_inactive_bg.png"), new Color(0.35f, 0.15f, 0.10f, 1f));
 
             // Save & Apply Button
-            Button saveBtn = CreateActionButton(bottomBarGO, "SaveApplyButton", "SAQLASH VA QABUL QILISH", new Vector2(180, 0), new Vector2(250, 44), fontAsset,
+            Button saveBtn = CreateActionButton(bottomBarGO, "SaveApplyButton", "Saqlash", new Vector2(150, 0), new Vector2(180, 44), fontAsset,
                 AssetDatabase.LoadAssetAtPath<Sprite>(BozorSpritesPath + "btn_buy_green_clean.png"), Color.white);
 
             // 13. Serialize Controller Properties
@@ -312,8 +312,8 @@ namespace IndependenceGame.Settings.Editor
             RectTransform rt = panelGO.GetComponent<RectTransform>();
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
-            rt.offsetMin = new Vector2(70, 24);
-            rt.offsetMax = new Vector2(-70, -28);
+            rt.offsetMin = new Vector2(40, 24);
+            rt.offsetMax = new Vector2(-40, -28);
 
             VerticalLayoutGroup vlg = panelGO.GetComponent<VerticalLayoutGroup>();
             vlg.spacing = 10;
@@ -347,7 +347,7 @@ namespace IndependenceGame.Settings.Editor
             lblRt.sizeDelta = Vector2.zero;
             TextMeshProUGUI lblTmp = lblGO.GetComponent<TextMeshProUGUI>();
             lblTmp.font = font;
-            lblTmp.fontSize = 14;
+            lblTmp.fontSize = 15;
             lblTmp.fontStyle = FontStyles.Bold;
             lblTmp.color = new Color(0.24f, 0.16f, 0.10f, 1f);
             lblTmp.alignment = TextAlignmentOptions.MidlineLeft;
@@ -425,7 +425,7 @@ namespace IndependenceGame.Settings.Editor
             valRt.sizeDelta = Vector2.zero;
             valueText = valGO.GetComponent<TextMeshProUGUI>();
             valueText.font = font;
-            valueText.fontSize = 14;
+            valueText.fontSize = 15;
             valueText.fontStyle = FontStyles.Bold;
             valueText.color = new Color(0.24f, 0.16f, 0.10f, 1f);
             valueText.alignment = TextAlignmentOptions.MidlineRight;
@@ -454,7 +454,7 @@ namespace IndependenceGame.Settings.Editor
             lblRt.sizeDelta = Vector2.zero;
             TextMeshProUGUI lblTmp = lblGO.GetComponent<TextMeshProUGUI>();
             lblTmp.font = font;
-            lblTmp.fontSize = 14;
+            lblTmp.fontSize = 15;
             lblTmp.fontStyle = FontStyles.Bold;
             lblTmp.color = new Color(0.24f, 0.16f, 0.10f, 1f);
             lblTmp.alignment = TextAlignmentOptions.MidlineLeft;
@@ -506,11 +506,11 @@ namespace IndependenceGame.Settings.Editor
             statRt.sizeDelta = Vector2.zero;
             statusText = statGO.GetComponent<TextMeshProUGUI>();
             statusText.font = font;
-            statusText.fontSize = 13;
+            statusText.fontSize = 14;
             statusText.fontStyle = FontStyles.Bold;
             statusText.color = new Color(0.35f, 0.22f, 0.14f, 1f);
             statusText.alignment = TextAlignmentOptions.MidlineLeft;
-            statusText.text = "O'CHIRILGAN (OFF)";
+            statusText.text = "O'chirilgan";
 
             return rowGO;
         }
@@ -535,7 +535,7 @@ namespace IndependenceGame.Settings.Editor
             lblRt.sizeDelta = Vector2.zero;
             TextMeshProUGUI lblTmp = lblGO.GetComponent<TextMeshProUGUI>();
             lblTmp.font = font;
-            lblTmp.fontSize = 14;
+            lblTmp.fontSize = 15;
             lblTmp.fontStyle = FontStyles.Bold;
             lblTmp.color = new Color(0.24f, 0.16f, 0.10f, 1f);
             lblTmp.alignment = TextAlignmentOptions.MidlineLeft;
@@ -571,11 +571,11 @@ namespace IndependenceGame.Settings.Editor
             capRt.sizeDelta = new Vector2(-36, 0);
             TextMeshProUGUI capTmp = captionGO.GetComponent<TextMeshProUGUI>();
             capTmp.font = font;
-            capTmp.fontSize = 13;
+            capTmp.fontSize = 14;
             capTmp.fontStyle = FontStyles.Bold;
             capTmp.color = new Color(0.20f, 0.14f, 0.08f, 1f);
             capTmp.alignment = TextAlignmentOptions.MidlineLeft;
-            capTmp.text = "Option";
+            capTmp.text = "Tanlang";
 
             // Arrow
             GameObject arrowGO = new GameObject("Arrow", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -588,7 +588,7 @@ namespace IndependenceGame.Settings.Editor
             arrowRt.sizeDelta = new Vector2(20, 20);
             TextMeshProUGUI arrowTmp = arrowGO.GetComponent<TextMeshProUGUI>();
             arrowTmp.font = font;
-            arrowTmp.fontSize = 13;
+            arrowTmp.fontSize = 14;
             arrowTmp.alignment = TextAlignmentOptions.Center;
             arrowTmp.color = new Color(0.30f, 0.20f, 0.14f, 1f);
             arrowTmp.text = "▼";
@@ -660,7 +660,7 @@ namespace IndependenceGame.Settings.Editor
             itemLblRt.sizeDelta = new Vector2(-20, 0);
             TextMeshProUGUI itemLblTmp = itemLblGO.GetComponent<TextMeshProUGUI>();
             itemLblTmp.font = font;
-            itemLblTmp.fontSize = 13;
+            itemLblTmp.fontSize = 14;
             itemLblTmp.color = new Color(0.20f, 0.14f, 0.08f, 1f);
             itemLblTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
@@ -720,7 +720,7 @@ namespace IndependenceGame.Settings.Editor
 
             TextMeshProUGUI tmp = textGO.GetComponent<TextMeshProUGUI>();
             tmp.font = font;
-            tmp.fontSize = 12;
+            tmp.fontSize = 13;
             tmp.fontStyle = FontStyles.Bold;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = isInitialActive ? new Color(0.2f, 0.15f, 0.1f, 1f) : new Color(0.25f, 0.18f, 0.12f, 0.9f);

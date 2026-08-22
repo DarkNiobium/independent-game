@@ -222,7 +222,6 @@ namespace IndependenceGame.Settings
             var uniqueList = new List<Resolution>();
             var seen = new HashSet<string>();
 
-            // Collect unique resolutions
             for (int i = resList.Length - 1; i >= 0; i--)
             {
                 string key = $"{resList[i].width}x{resList[i].height}";
@@ -233,20 +232,19 @@ namespace IndependenceGame.Settings
                 }
             }
 
-            // Sort descending by resolution width & height
             uniqueList.Sort((a, b) => (b.width * b.height).CompareTo(a.width * a.height));
             availableResolutions.AddRange(uniqueList);
 
             foreach (var r in availableResolutions)
             {
-                options.Add($"{r.width} x {r.height}");
+                options.Add($"{r.width} × {r.height}");
             }
 
             if (availableResolutions.Count == 0)
             {
                 var fallback = Screen.currentResolution;
                 availableResolutions.Add(fallback);
-                options.Add($"{fallback.width} x {fallback.height}");
+                options.Add($"{fallback.width} × {fallback.height}");
             }
 
             resolutionDropdown.AddOptions(options);
@@ -267,7 +265,7 @@ namespace IndependenceGame.Settings
             }
             else
             {
-                options.AddRange(new[] { "Past (Low)", "O'rta (Medium)", "Yuqori (High)", "Ultra" });
+                options.AddRange(new[] { "Past", "O'rta", "Yuqori", "Ultra" });
             }
 
             qualityDropdown.AddOptions(options);
@@ -279,9 +277,9 @@ namespace IndependenceGame.Settings
             fullscreenDropdown.ClearOptions();
             fullscreenDropdown.AddOptions(new List<string>
             {
-                "To'liq ekran (Borderless)",
-                "To'liq ekran (Eksklyuziv)",
-                "Oyna rejimida (Windowed)"
+                "To'liq ekran",
+                "Eksklyuziv to'liq ekran",
+                "Oyna rejimida"
             });
         }
 
@@ -294,7 +292,7 @@ namespace IndependenceGame.Settings
                 "30 FPS",
                 "60 FPS",
                 "120 FPS",
-                "Cheksiz (Unlimited)"
+                "Cheksiz"
             });
         }
 
@@ -316,10 +314,10 @@ namespace IndependenceGame.Settings
             autoSaveDropdown.ClearOptions();
             autoSaveDropdown.AddOptions(new List<string>
             {
-                "O'chirilgan (Off)",
-                "Har 5 daqiqada",
-                "Har 10 daqiqada",
-                "Har 15 daqiqada"
+                "O'chirilgan",
+                "5 daqiqa",
+                "10 daqiqa",
+                "15 daqiqa"
             });
         }
 
@@ -384,7 +382,7 @@ namespace IndependenceGame.Settings
             if (targetFpsDropdown != null)
             {
                 int fpsIdx = Array.IndexOf(fpsValues, workingSettings.targetFps);
-                if (fpsIdx < 0) fpsIdx = 1; // default 60
+                if (fpsIdx < 0) fpsIdx = 1;
                 targetFpsDropdown.SetValueWithoutNotify(fpsIdx);
             }
             UpdateGraphicsLabels();
@@ -403,7 +401,7 @@ namespace IndependenceGame.Settings
             if (autoSaveDropdown != null)
             {
                 int autoIdx = Array.IndexOf(autoSaveValues, workingSettings.autoSaveIntervalMinutes);
-                if (autoIdx < 0) autoIdx = 1; // default 5m
+                if (autoIdx < 0) autoIdx = 1;
                 autoSaveDropdown.SetValueWithoutNotify(autoIdx);
             }
             UpdateGameplayLabels();
@@ -414,12 +412,12 @@ namespace IndependenceGame.Settings
             if (masterVolumeText != null) masterVolumeText.text = $"{Mathf.RoundToInt(workingSettings.masterVolume * 100)}%";
             if (musicVolumeText != null) musicVolumeText.text = $"{Mathf.RoundToInt(workingSettings.musicVolume * 100)}%";
             if (sfxVolumeText != null) sfxVolumeText.text = $"{Mathf.RoundToInt(workingSettings.sfxVolume * 100)}%";
-            if (muteToggleStatusText != null) muteToggleStatusText.text = workingSettings.isMuted ? "O'CHIRILGAN (MUTED)" : "YOQILGAN (ACTIVE)";
+            if (muteToggleStatusText != null) muteToggleStatusText.text = workingSettings.isMuted ? "O'chirilgan" : "Yoqilgan";
         }
 
         private void UpdateGraphicsLabels()
         {
-            if (vSyncStatusText != null) vSyncStatusText.text = workingSettings.vSync ? "YOQILGAN (ON)" : "O'CHIRILGAN (OFF)";
+            if (vSyncStatusText != null) vSyncStatusText.text = workingSettings.vSync ? "Yoqilgan" : "O'chirilgan";
         }
 
         private void UpdateGameplayLabels()
