@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6391cd918bfd919258f51a524719c9f6, type: 3}
-  m_Name: SO_DoppiDokoni
+  m_Name: SO_OziqOvqat
   m_EditorClassIdentifier: Assembly-CSharp::BozorShop.BuildingDataSO
-  id: SO_DoppiDokoni
-  displayName: DO'PPI DO'KONI
+  id: SO_OziqOvqat
+  displayName: OZIQ-OVQAT DO'KONI
   category: 3
-  buildingPreview: {fileID: 21300000, guid: 4588abbdf3c1be90ba32105fac38b0f3, type: 3}
-  resourceIcon: {fileID: 21300000, guid: c9ad1177c01fe8e60a646228f10997ab, type: 3}
-  productionRate: 25
+  buildingPreview: {fileID: 21300000, guid: 57f720565915da8b384600dfc016d356, type: 3}
+  resourceIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
+  productionRate: 40
   rateUnit: / soat
   capacityIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
-  capacity: 40
-  priceGold: 500000
+  capacity: 60
+  priceGold: 700000
   prefabToBuild: {fileID: 0}

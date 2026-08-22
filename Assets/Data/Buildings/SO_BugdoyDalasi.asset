@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6391cd918bfd919258f51a524719c9f6, type: 3}
-  m_Name: SO_ChorvaUyi
+  m_Name: SO_BugdoyDalasi
   m_EditorClassIdentifier: Assembly-CSharp::BozorShop.BuildingDataSO
-  id: SO_ChorvaUyi
-  displayName: CHORVA UYI
-  category: 1
-  buildingPreview: {fileID: 21300000, guid: 568f512301c83eec180261d4f3681f64, type: 3}
-  resourceIcon: {fileID: 21300000, guid: 3c2c97446b0c6928da1c54ddb2635703, type: 3}
-  productionRate: 15
+  id: SO_BugdoyDalasi
+  displayName: BUG'DOYZOR
+  category: 2
+  buildingPreview: {fileID: 21300000, guid: 984d070734610b14cbb7f113c8a831c7, type: 3}
+  resourceIcon: {fileID: 21300000, guid: 26947beb1db28d8d386e47b4ad179e37, type: 3}
+  productionRate: 30
   rateUnit: / soat
   capacityIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
-  capacity: 60
-  priceGold: 500000
+  capacity: 120
+  priceGold: 600000
   prefabToBuild: {fileID: 0}

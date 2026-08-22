@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,16 +18,25 @@ namespace BozorShop
         [SerializeField] private GameObject windowRoot;
         [SerializeField] private Button closeButton;
 
-        [Header("Tabs")]
+        [Header("Single Row Tabs")]
         [SerializeField] private List<ShopTabUI> tabs = new List<ShopTabUI>();
 
-        [Header("Buildings Data")]
-        [SerializeField] private List<BuildingDataSO> allBuildings = new List<BuildingDataSO>();
-        [SerializeField] private Transform cardsContainer;
+        [Header("Scroll & Content")]
+        [SerializeField] private ScrollRect scrollRect;
+        [SerializeField] private RectTransform contentTransform;
+        [SerializeField] private RectTransform viewportTransform;
         [SerializeField] private ShopCardUI cardPrefab;
 
+        [Header("Buildings Data (All Categories)")]
+        [SerializeField] private List<BuildingDataSO> allBuildings = new List<BuildingDataSO>();
+
         private List<ShopCardUI> activeCardViews = new List<ShopCardUI>();
-        private BuildingCategory currentCategory = BuildingCategory.All;
+        private Dictionary<BuildingCategory, float> categoryNormalizedPositions = new Dictionary<BuildingCategory, float>();
+        private Dictionary<BuildingCategory, RectTransform> categoryFirstCard = new Dictionary<BuildingCategory, RectTransform>();
+
+        private BuildingCategory currentActiveCategory = BuildingCategory.Production;
+        private Coroutine smoothScrollCoroutine;
+        private bool isAutoScrolling = false;
 
         private void Awake()
         {
@@ -40,15 +51,21 @@ namespace BozorShop
             {
                 if (tab != null)
                 {
-                    tab.Initialize(OnTabChanged);
+                    tab.Initialize(OnTabClicked);
                 }
+            }
+
+            if (scrollRect != null)
+            {
+                scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
             }
         }
 
         private void Start()
         {
             UpdateGoldUI();
-            SelectTab(BuildingCategory.All);
+            BuildContinuousCardList();
+            StartCoroutine(CalculateCategoryPositionsCoroutine());
         }
 
         public void AddGold(int amount)
@@ -58,50 +75,162 @@ namespace BozorShop
             RefreshAffordability();
         }
 
-        public void OnTabChanged(BuildingCategory category)
+        private void BuildContinuousCardList()
         {
-            SelectTab(category);
+            if (contentTransform != null)
+            {
+                for (int i = contentTransform.childCount - 1; i >= 0; i--)
+                {
+                    Destroy(contentTransform.GetChild(i).gameObject);
+                }
+            }
+            activeCardViews.Clear();
+            categoryFirstCard.Clear();
+
+            // Order categories consecutively
+            BuildingCategory[] order = new[] {
+                BuildingCategory.Production,
+                BuildingCategory.Agriculture,
+                BuildingCategory.Trade,
+                BuildingCategory.Decorations
+            };
+
+            foreach (var cat in order)
+            {
+                bool isFirstOfCategory = true;
+                foreach (var data in allBuildings)
+                {
+                    if (data == null || data.category != cat) continue;
+
+                    ShopCardUI cardInstance = Instantiate(cardPrefab, contentTransform);
+                    cardInstance.Setup(data, OnBuyBuilding);
+                    cardInstance.UpdateAffordability(playerGold);
+                    activeCardViews.Add(cardInstance);
+
+                    RectTransform cardRt = cardInstance.GetComponent<RectTransform>();
+                    if (isFirstOfCategory)
+                    {
+                        categoryFirstCard[cat] = cardRt;
+                        isFirstOfCategory = false;
+                    }
+                }
+            }
         }
 
-        public void SelectTab(BuildingCategory category)
+        private IEnumerator CalculateCategoryPositionsCoroutine()
         {
-            currentCategory = category;
+            // Wait for end of frame / canvas layout recalculation
+            yield return new WaitForEndOfFrame();
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform);
 
-            // Update Tab Visuals
+            CalculateCategoryPositions();
+            SetTabVisuals(BuildingCategory.Production);
+        }
+
+        private void CalculateCategoryPositions()
+        {
+            categoryNormalizedPositions.Clear();
+            if (contentTransform == null || viewportTransform == null) return;
+
+            float contentWidth = contentTransform.rect.width;
+            float viewportWidth = viewportTransform.rect.width;
+            float scrollableRange = contentWidth - viewportWidth;
+
+            if (scrollableRange <= 0.01f)
+            {
+                foreach (var cat in categoryFirstCard.Keys)
+                {
+                    categoryNormalizedPositions[cat] = 0f;
+                }
+                return;
+            }
+
+            foreach (var pair in categoryFirstCard)
+            {
+                BuildingCategory cat = pair.Key;
+                RectTransform firstCard = pair.Value;
+                if (firstCard != null)
+                {
+                    // Card position relative to content left edge
+                    float cardLeft = firstCard.anchoredPosition.x - (firstCard.rect.width * firstCard.pivot.x);
+                    if (cardLeft < 0) cardLeft = 0;
+
+                    float normPos = Mathf.Clamp01(cardLeft / scrollableRange);
+                    categoryNormalizedPositions[cat] = normPos;
+                }
+            }
+        }
+
+        public void OnTabClicked(BuildingCategory category)
+        {
+            if (categoryNormalizedPositions.TryGetValue(category, out float targetNormPos))
+            {
+                if (smoothScrollCoroutine != null)
+                    StopCoroutine(smoothScrollCoroutine);
+
+                smoothScrollCoroutine = StartCoroutine(SmoothScrollTo(targetNormPos, category));
+            }
+        }
+
+        private IEnumerator SmoothScrollTo(float targetNormPos, BuildingCategory targetCategory)
+        {
+            isAutoScrolling = true;
+            SetTabVisuals(targetCategory);
+
+            float startNormPos = scrollRect.horizontalNormalizedPosition;
+            float elapsed = 0f;
+            float duration = 0.3f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                // Ease out cubic
+                float ease = 1f - Mathf.Pow(1f - t, 3f);
+                scrollRect.horizontalNormalizedPosition = Mathf.Lerp(startNormPos, targetNormPos, ease);
+                yield return null;
+            }
+
+            scrollRect.horizontalNormalizedPosition = targetNormPos;
+            isAutoScrolling = false;
+            currentActiveCategory = targetCategory;
+            SetTabVisuals(targetCategory);
+        }
+
+        private void OnScrollValueChanged(Vector2 scrollPos)
+        {
+            if (isAutoScrolling) return;
+
+            // Determine visible category based on scroll position
+            float currentNormPos = scrollRect.horizontalNormalizedPosition;
+            BuildingCategory closestCategory = currentActiveCategory;
+            float minDistance = float.MaxValue;
+
+            foreach (var pair in categoryNormalizedPositions)
+            {
+                float dist = Mathf.Abs(currentNormPos - pair.Value);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    closestCategory = pair.Key;
+                }
+            }
+
+            if (closestCategory != currentActiveCategory)
+            {
+                currentActiveCategory = closestCategory;
+                SetTabVisuals(closestCategory);
+            }
+        }
+
+        private void SetTabVisuals(BuildingCategory activeCat)
+        {
             foreach (var tab in tabs)
             {
                 if (tab != null)
                 {
-                    tab.SetActive(tab.Category == category);
-                }
-            }
-
-            RebuildCards();
-        }
-
-        private void RebuildCards()
-        {
-            // Destroy ALL existing children in cardsContainer
-            if (cardsContainer != null)
-            {
-                for (int i = cardsContainer.childCount - 1; i >= 0; i--)
-                {
-                    Destroy(cardsContainer.GetChild(i).gameObject);
-                }
-            }
-            activeCardViews.Clear();
-
-            // Populate cards
-            foreach (var data in allBuildings)
-            {
-                if (data == null) continue;
-
-                if (currentCategory == BuildingCategory.All || data.category == currentCategory)
-                {
-                    ShopCardUI cardInstance = Instantiate(cardPrefab, cardsContainer);
-                    cardInstance.Setup(data, OnBuyBuilding);
-                    cardInstance.UpdateAffordability(playerGold);
-                    activeCardViews.Add(cardInstance);
+                    tab.SetActive(tab.Category == activeCat);
                 }
             }
         }

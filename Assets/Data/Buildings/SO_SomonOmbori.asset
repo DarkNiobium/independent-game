@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6391cd918bfd919258f51a524719c9f6, type: 3}
-  m_Name: SO_PaxtaDalasi
+  m_Name: SO_SomonOmbori
   m_EditorClassIdentifier: Assembly-CSharp::BozorShop.BuildingDataSO
-  id: SO_PaxtaDalasi
-  displayName: PAXTA DALASI
+  id: SO_SomonOmbori
+  displayName: SOMONXONA
   category: 2
-  buildingPreview: {fileID: 21300000, guid: b3ba9bc2b19c6a0739079f3fc9f58a5a, type: 3}
-  resourceIcon: {fileID: 21300000, guid: 26947beb1db28d8d386e47b4ad179e37, type: 3}
-  productionRate: 20
+  buildingPreview: {fileID: 21300000, guid: 4e553b0f09107e34988c8558eacaf5ef, type: 3}
+  resourceIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
+  productionRate: 18
   rateUnit: / soat
   capacityIcon: {fileID: 21300000, guid: b9df1221a6a61337488a69abd4703eec, type: 3}
-  capacity: 80
-  priceGold: 500000
+  capacity: 75
+  priceGold: 400000
   prefabToBuild: {fileID: 0}
