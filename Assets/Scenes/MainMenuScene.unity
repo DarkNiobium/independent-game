@@ -14967,7 +14967,7 @@ MonoBehaviour:
   videoPlayer: {fileID: 1936812289}
   videoDisplay: {fileID: 293076519}
   staticFallbackImage: {fileID: 1763464145}
-  streamingAssetsFileName: bg_main_menu_cinematic.mp4
+  streamingAssetsFileName: bg_main_menu_cinematic.webm
   fadeInDuration: 0.6
 --- !u!328 &1936812289
 VideoPlayer:
